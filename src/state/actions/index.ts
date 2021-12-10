@@ -1,4 +1,5 @@
 import { ActionType } from "../action-types";
+import { historyItemType } from "../reducers/historyReducer";
 
 interface DepositAction {
   type: ActionType.DEPOSIT;
@@ -13,4 +14,19 @@ interface BankruptAction {
   type: ActionType.BANKRUPT;
 }
 
-export type Action = DepositAction | WithdrawAction | BankruptAction;
+interface RegisterTransactionAction {
+  type: ActionType.REGISTER_TRANSACTION;
+  payload: historyItemType;
+}
+
+interface DeleteTransactionAction {
+  type: ActionType.DELETE_TRANSACTION;
+  payload: string;
+}
+
+export type Action =
+  | DepositAction
+  | WithdrawAction
+  | BankruptAction
+  | RegisterTransactionAction
+  | DeleteTransactionAction;

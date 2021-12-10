@@ -11,11 +11,15 @@ function App() {
   const [personName, setPersonName] = useState<string>("");
   const [errors, setErrors] = useState<string[]>([]);
 
-  const { depositMoney, withdrawMoney, bankruptMoney } = bindActionCreators(
-    actionCreators,
-    dispatch
-  );
+  const {
+    depositMoney,
+    withdrawMoney,
+    bankruptMoney,
+    addToHistory,
+    deleteFromHistory,
+  } = bindActionCreators(actionCreators, dispatch);
   const amount = useSelector((state: State) => state.bank);
+  const history = useSelector((state: State) => state.history);
 
   const addError = (err: string) => {
     console.log(err);
@@ -36,11 +40,11 @@ function App() {
       addError("You can't withdraw money that you don't have!");
       errCount++;
     }
-    if(personName.length === 0){
+    if (personName.length === 0) {
       addError("Enter a name");
       errCount++;
     }
-    if(personName.length === 0){
+    if (personName.length === 0) {
       addError("Name is to short, at least 2 characters");
       errCount++;
     }
@@ -56,6 +60,12 @@ function App() {
     if (checkForm(ActionType.DEPOSIT)) {
       depositMoney(bankInput);
       setBankInput(0);
+      addToHistory({
+        id: "123",
+        title: personName,
+        amouth: 1302,
+        date: "12.02",
+      });
     }
   };
 
@@ -114,6 +124,16 @@ function App() {
         value={personName}
         onChange={(e) => setPersonName(e.target.value)}
       />
+      <button
+        onClick={() => {
+          console.log(history);
+        }}
+      >
+        check
+      </button>
+      <div>{history && <div>{history.map(item => {
+        return <div>{item.amouth}</div>
+      })}</div>}</div>
     </div>
   );
 }

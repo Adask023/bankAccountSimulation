@@ -1,6 +1,7 @@
 import { ActionType } from "../action-types";
 import { Dispatch } from "redux";
 import { Action } from "../actions";
+import { historyItemType } from "../reducers/historyReducer";
 
 export const depositMoney = (amount: number) => {
   return (dispatch: Dispatch<Action>) => {
@@ -27,3 +28,25 @@ export const bankruptMoney = () => {
     });
   };
 };
+
+// history
+export const addToHistory = (newHistory: historyItemType) => {
+  return (dispatch: Dispatch<Action>) => {
+    dispatch({
+      type: ActionType.REGISTER_TRANSACTION,
+      payload: newHistory,
+    });
+  };
+};
+
+export const deleteFromHistory = (id: string) => {
+  return (dispatch: Dispatch<Action>) => {
+    dispatch({
+      type: ActionType.DELETE_TRANSACTION,
+      payload: id,
+    });
+  };
+};
+
+
+

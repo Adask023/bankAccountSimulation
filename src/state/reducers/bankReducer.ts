@@ -1,9 +1,9 @@
 import { ActionType } from "../action-types";
 import { Action } from "../actions";
 
-const initialState = 0;
+const initialBankState = 0;
 
-const reducer = (state: number = initialState, action: Action) => {
+export const bankReducer = (state: number = initialBankState, action: Action) => {
   switch (action.type) {
     case ActionType.DEPOSIT:
       return state + action.payload;
@@ -16,4 +16,8 @@ const reducer = (state: number = initialState, action: Action) => {
   }
 };
 
-export default reducer;
+
+
+export default bankReducer
+
+
