@@ -39,14 +39,3 @@ export const addToHistory = (newHistory: historyItemType) => {
   };
 };
 
-export const deleteFromHistory = (id: string) => {
-  return (dispatch: Dispatch<Action>) => {
-    dispatch({
-      type: ActionType.DELETE_TRANSACTION,
-      payload: id,
-    });
-  };
-};
-
-
-

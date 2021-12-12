@@ -4,6 +4,15 @@ import { bindActionCreators } from "redux";
 import { actionCreators, State } from "./state";
 import { useState } from "react";
 import { ActionType } from "./state/action-types";
+import StyledButtonBig, { StyledButtonSmall } from "./components/Button/Button";
+import { createGlobalStyle } from "styled-components";
+import { StyledSectionWrapper, StyledWrapper } from "./components/App.styles";
+
+const GlobalStyle = createGlobalStyle`
+padding: 0;
+margin: 0;
+box-sizing: border-box;
+`;
 
 function App() {
   const dispatch = useDispatch();
@@ -11,13 +20,8 @@ function App() {
   const [personName, setPersonName] = useState<string>("");
   const [errors, setErrors] = useState<string[]>([]);
 
-  const {
-    depositMoney,
-    withdrawMoney,
-    bankruptMoney,
-    addToHistory,
-    deleteFromHistory,
-  } = bindActionCreators(actionCreators, dispatch);
+  const { depositMoney, withdrawMoney, bankruptMoney, addToHistory } =
+    bindActionCreators(actionCreators, dispatch);
   const amount = useSelector((state: State) => state.bank);
   const history = useSelector((state: State) => state.history);
 
@@ -56,16 +60,39 @@ function App() {
     }
   };
 
+  const getDate = () => {
+    const today = new Date();
+    const date =
+      today.getDate() +
+      "-" +
+      (today.getMonth() + 1) +
+      "-" +
+      today.getFullYear();
+    const time =
+      today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    const dateTime = date + " " + time;
+    return dateTime;
+  };
+
+  const handleAddHistory = (
+    historyAction: ActionType.DEPOSIT | ActionType.WITHDRAW
+  ) => {
+    const isDeposit = historyAction === ActionType.DEPOSIT ? true : false;
+    addToHistory({
+      id: "123",
+      type: isDeposit ? "Deposit" : "Withdraw",
+      name: personName,
+      amouth: isDeposit ? bankInput : -bankInput,
+      accountBalance: amount + (isDeposit ? bankInput : -bankInput),
+      date: getDate(),
+    });
+  };
+
   const handleDeposit = () => {
     if (checkForm(ActionType.DEPOSIT)) {
       depositMoney(bankInput);
       setBankInput(0);
-      addToHistory({
-        id: "123",
-        title: personName,
-        amouth: 1302,
-        date: "12.02",
-      });
+      handleAddHistory(ActionType.DEPOSIT);
     }
   };
 
@@ -73,67 +100,98 @@ function App() {
     if (checkForm(ActionType.WITHDRAW)) {
       withdrawMoney(bankInput);
       setBankInput(0);
+      handleAddHistory(ActionType.WITHDRAW);
     }
   };
 
   return (
     <div className="App">
-      <h1>{amount}</h1>
-      {errors && (
-        <div>
-          {errors.map((err) => (
-            <p key={Math.floor(Math.random() * 1000)}>{err}</p>
-          ))}
-        </div>
-      )}
-      <button
-        disabled={!bankInput}
-        onClick={() => {
-          handleDeposit();
-        }}
-      >
-        Deposit
-      </button>
-      <button
-        disabled={!bankInput}
-        onClick={() => {
-          handleWithdraw();
-        }}
-      >
-        Withdraw
-      </button>
-      <button
-        onClick={() => {
-          bankruptMoney();
-          setErrors([]);
-        }}
-      >
-        Bankrupt
-      </button>
-      <br />
-      How much:
-      <input
-        type="number"
-        value={bankInput}
-        onChange={(e) => setBankInput(Number(e.target.value))}
-      />
-      <br />
-      Name:
-      <input
-        type="text"
-        value={personName}
-        onChange={(e) => setPersonName(e.target.value)}
-      />
-      <button
-        onClick={() => {
-          console.log(history);
-        }}
-      >
-        check
-      </button>
-      <div>{history && <div>{history.map(item => {
-        return <div>{item.amouth}</div>
-      })}</div>}</div>
+      <StyledWrapper>
+        <GlobalStyle />
+        <StyledSectionWrapper>
+          <h1>{amount}</h1>
+          {errors && (
+            <div>
+              {errors.map((err) => (
+                <p key={Math.floor(Math.random() * 1000)}>{err}</p>
+              ))}
+            </div>
+          )}
+          <button
+            disabled={!bankInput}
+            onClick={() => {
+              handleDeposit();
+            }}
+          >
+            Deposit
+          </button>
+          <button
+            disabled={!bankInput}
+            onClick={() => {
+              handleWithdraw();
+            }}
+          >
+            Withdraw
+          </button>
+          <button
+            onClick={() => {
+              bankruptMoney();
+              setErrors([]);
+            }}
+          >
+            Bankrupt
+          </button>
+          <br />
+          How much:
+          <input
+            type="number"
+            value={bankInput}
+            onChange={(e) => setBankInput(Number(e.target.value))}
+          />
+          <br />
+          Name:
+          <input
+            type="text"
+            value={personName}
+            onChange={(e) => setPersonName(e.target.value)}
+          />
+          {/* <StyledButtonBig
+            onClick={() => {
+              console.log(history);
+            }}
+          >
+            check
+          </StyledButtonBig>
+          <StyledButtonSmall
+            variant="outline"
+            onClick={() => {
+              console.log(history);
+            }}
+          >
+            check
+          </StyledButtonSmall> */}
+        </StyledSectionWrapper>
+        <StyledSectionWrapper>
+          <div>
+            {history && (
+              <div>
+                {history.map((item) => {
+                  return (
+                    <div key={item.id}>
+                      <h2>
+                        {item.name}: {item.type}
+                      </h2>
+                      {item.amouth}
+                      <p>{item.date}</p>
+                      <p>balance after transaction: {item.accountBalance}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </StyledSectionWrapper>
+      </StyledWrapper>
     </div>
   );
 }
