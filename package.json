@@ -1,6 +1,7 @@
 {
   "name": "bankacc",
   "version": "0.1.0",
+  "homepage": "https://adask023.github.io/bankAccountSimulation/",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",
@@ -12,6 +13,7 @@
     "@types/react-dom": "^17.0.0",
     "@types/react-redux": "^7.1.20",
     "@types/redux-thunk": "^2.1.0",
+    "gh-pages": "^3.2.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.6",
@@ -27,7 +29,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "yarn build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
