@@ -1,4 +1,4 @@
-import { StyledButtonBig, StyledButtonSmall } from "./Button.styles";
+import { StyledButton, StyledButtonRed } from "./Button.styles";
 
-export default StyledButtonBig;
-export { StyledButtonSmall };
+export default StyledButton;
+export { StyledButtonRed };

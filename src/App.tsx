@@ -4,14 +4,17 @@ import { bindActionCreators } from "redux";
 import { actionCreators, State } from "./state";
 import { useState } from "react";
 import { ActionType } from "./state/action-types";
-import StyledButtonBig, { StyledButtonSmall } from "./components/Button/Button";
 import { createGlobalStyle } from "styled-components";
 import { StyledSectionWrapper, StyledWrapper } from "./components/App.styles";
+import { StyledInput } from "./components/Input/Input.styles";
+import { ActionSection } from "./components/ActionSection/ActionSection";
+import { HistoryList } from "./components/History/HistoryList";
 
 const GlobalStyle = createGlobalStyle`
 padding: 0;
 margin: 0;
 box-sizing: border-box;
+background-color: #8A7356;
 `;
 
 function App() {
@@ -23,7 +26,6 @@ function App() {
   const { depositMoney, withdrawMoney, bankruptMoney, addToHistory } =
     bindActionCreators(actionCreators, dispatch);
   const amount = useSelector((state: State) => state.bank);
-  const history = useSelector((state: State) => state.history);
 
   const addError = (err: string) => {
     console.log(err);
@@ -52,6 +54,11 @@ function App() {
       addError("Name is to short, at least 2 characters");
       errCount++;
     }
+    if (bankInput === 0) {
+      addError("Value cant be 0");
+      errCount++;
+    }
+
     if (errCount) {
       return false;
     } else {
@@ -108,8 +115,9 @@ function App() {
     <div className="App">
       <StyledWrapper>
         <GlobalStyle />
+
         <StyledSectionWrapper>
-          <h1>{amount}</h1>
+          <h1>{amount} $</h1>
           {errors && (
             <div>
               {errors.map((err) => (
@@ -117,79 +125,35 @@ function App() {
               ))}
             </div>
           )}
-          <button
-            disabled={!bankInput}
-            onClick={() => {
-              handleDeposit();
-            }}
-          >
-            Deposit
-          </button>
-          <button
-            disabled={!bankInput}
-            onClick={() => {
-              handleWithdraw();
-            }}
-          >
-            Withdraw
-          </button>
-          <button
-            onClick={() => {
-              bankruptMoney();
-              setErrors([]);
-            }}
-          >
-            Bankrupt
-          </button>
-          <br />
-          How much:
-          <input
-            type="number"
-            value={bankInput}
-            onChange={(e) => setBankInput(Number(e.target.value))}
+          <ActionSection
+            handleDeposit={handleDeposit}
+            handleWithdraw={handleWithdraw}
+            bankInput={bankInput}
+            bankruptMoney={bankruptMoney}
+            setErrors={setErrors}
           />
-          <br />
-          Name:
-          <input
-            type="text"
-            value={personName}
-            onChange={(e) => setPersonName(e.target.value)}
-          />
-          {/* <StyledButtonBig
-            onClick={() => {
-              console.log(history);
-            }}
-          >
-            check
-          </StyledButtonBig>
-          <StyledButtonSmall
-            variant="outline"
-            onClick={() => {
-              console.log(history);
-            }}
-          >
-            check
-          </StyledButtonSmall> */}
+
+          <StyledInput>
+            <input
+              type="number"
+              value={bankInput}
+              onChange={(e) => setBankInput(Number(e.target.value))}
+              min="0"
+            />
+            <span></span>
+          </StyledInput>
+          <StyledInput>
+            <input
+              type="text"
+              value={personName}
+              onChange={(e) => setPersonName(e.target.value)}
+              placeholder="name..."
+            />
+            <span></span>
+          </StyledInput>
         </StyledSectionWrapper>
         <StyledSectionWrapper>
-          <div>
-            {history && (
-              <div>
-                {history.map((item) => {
-                  return (
-                    <div key={item.id}>
-                      <h2>
-                        {item.name}: {item.type}
-                      </h2>
-                      {item.amouth}
-                      <p>{item.date}</p>
-                      <p>balance after transaction: {item.accountBalance}</p>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
+          <HistoryList />
         </StyledSectionWrapper>
       </StyledWrapper>
     </div>
