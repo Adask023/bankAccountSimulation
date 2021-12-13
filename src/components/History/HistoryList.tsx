@@ -1,31 +1,22 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { State } from "../../state";
+import { HistoryItem } from "./HistoryItem";
 import { StyledHistoryList } from "./HistoryList.styles";
 
-interface Props {}
-
-export const HistoryList = (props: Props) => {
+export const HistoryList = () => {
   const history = useSelector((state: State) => state.history);
   return (
     <StyledHistoryList>
+      <h1>History</h1>
       {history.length > 0 ? (
-        <div>
+        <div className="history_list">
           {history.map((item) => {
-            return (
-              <div key={item.id}>
-                <h2>
-                  {item.name}: {item.type}
-                </h2>
-                {item.amouth}
-                <p>{item.date}</p>
-                <p>balance after transaction: {item.accountBalance}</p>
-              </div>
-            );
+            return <HistoryItem item={item} key={item.id} />;
           })}
         </div>
       ) : (
-        <div>No history yet</div>
+        <h5>No history yet</h5>
       )}
     </StyledHistoryList>
   );

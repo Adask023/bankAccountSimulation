@@ -37,6 +37,7 @@ function App() {
   };
 
   const checkForm = (action: string) => {
+    setErrors([]);
     let errCount = 0;
     if (action === ActionType.DEPOSIT && bankInput > 10000) {
       addError("No joking, you can't have that much money!");
@@ -47,11 +48,7 @@ function App() {
       errCount++;
     }
     if (personName.length === 0) {
-      addError("Enter a name");
-      errCount++;
-    }
-    if (personName.length === 0) {
-      addError("Name is to short, at least 2 characters");
+      addError("Name is to short, please enter at least 2 characters");
       errCount++;
     }
     if (bankInput === 0) {
@@ -75,8 +72,7 @@ function App() {
       (today.getMonth() + 1) +
       "-" +
       today.getFullYear();
-    const time =
-      today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    const time = today.getHours() + ":" + today.getMinutes();
     const dateTime = date + " " + time;
     return dateTime;
   };
@@ -89,7 +85,7 @@ function App() {
       id: "123",
       type: isDeposit ? "Deposit" : "Withdraw",
       name: personName,
-      amouth: isDeposit ? bankInput : -bankInput,
+      amount: isDeposit ? bankInput : -bankInput,
       accountBalance: amount + (isDeposit ? bankInput : -bankInput),
       date: getDate(),
     });
@@ -119,19 +115,12 @@ function App() {
         <StyledSectionWrapper>
           <h1>{amount} $</h1>
           {errors && (
-            <div>
+            <div className="errors">
               {errors.map((err) => (
                 <p key={Math.floor(Math.random() * 1000)}>{err}</p>
               ))}
             </div>
           )}
-          <ActionSection
-            handleDeposit={handleDeposit}
-            handleWithdraw={handleWithdraw}
-            bankInput={bankInput}
-            bankruptMoney={bankruptMoney}
-            setErrors={setErrors}
-          />
 
           <StyledInput>
             <input
@@ -151,6 +140,13 @@ function App() {
             />
             <span></span>
           </StyledInput>
+          <ActionSection
+            handleDeposit={handleDeposit}
+            handleWithdraw={handleWithdraw}
+            bankInput={bankInput}
+            bankruptMoney={bankruptMoney}
+            setErrors={setErrors}
+          />
         </StyledSectionWrapper>
         <StyledSectionWrapper>
           <HistoryList />

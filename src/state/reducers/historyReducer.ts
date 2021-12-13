@@ -5,7 +5,7 @@ export type historyItemType = {
   id: string;
   type: string;
   name: string;
-  amouth: number;
+  amount: number;
   accountBalance: number;
   date: string;
 };
@@ -13,14 +13,14 @@ export type historyItemType = {
 const historyReducer = (state: historyItemType[] = [], action: Action) => {
   switch (action.type) {
     case ActionType.REGISTER_TRANSACTION:
-      const newState = [...state, action.payload];
+      const newState = [action.payload, ...state];
       return newState;
     case ActionType.DELETE_TRANSACTION:
       return state.filter(
         (historyItem: historyItemType) => historyItem.id !== action.payload
       );
     case ActionType.BANKRUPT:
-      return []
+      return [];
     default:
       return state;
   }
